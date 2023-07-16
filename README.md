@@ -76,8 +76,8 @@ A custom container image can be used by setting the variable `enable_custom_batc
 
 ## add to .bashrc
 * export OPENAI_API_KEY=your openai_api_key
-* export GOOGLE_API_KEY=google_api_key
-* export VIDEO_INT_KEY=video_int_key (google video intelligence api key - not needed in current project)
+* export HUGGINFACE_TOKEN=hugginface_token
+* export USDA_API_KEY=google_api_key
 * export YOUTUBE_API_KEY=youtube_api_key
 * export AWS_ACCESS_KEY_ID=your_aws_access_key_id
 * export AWS_SECRET_ACCESS_KEY=your_aws_secret_access_key
@@ -168,3 +168,18 @@ terraform apply --var-file prod.tfvars
 The Amazon Sagemaker notebook url is output as `SAGEMAKER_NOTEBOOK_URL`. Open it to access the notebook.
 
 
+#### ELK 
+
+To deploy, initialize Terraform:
+
+`cd ec2 && terraform init`
+
+Change .env file to your own values
+
+Apply the configuration:
+
+```
+terraform apply
+```
+kibana should be available on remote_ip:5601
+elastic search should be available on remote_ip:9200
