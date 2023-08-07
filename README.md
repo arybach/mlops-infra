@@ -77,8 +77,7 @@ A custom container image can be used by setting the variable `enable_custom_batc
 ## add to .bashrc
 * export OPENAI_API_KEY=your openai_api_key
 * export HUGGINFACE_TOKEN=hugginface_token
-* export USDA_API_KEY=google_api_key
-* export YOUTUBE_API_KEY=youtube_api_key
+* export USDA_API_KEY=USDA_API_KEY
 * export AWS_ACCESS_KEY_ID=your_aws_access_key_id
 * export AWS_SECRET_ACCESS_KEY=your_aws_secret_access_key
 * export AWS_REGION=your_aws_region
@@ -168,7 +167,7 @@ terraform apply --var-file prod.tfvars
 The Amazon Sagemaker notebook url is output as `SAGEMAKER_NOTEBOOK_URL`. Open it to access the notebook.
 
 
-#### ELK 
+### ELK 
 
 To deploy, initialize Terraform:
 
@@ -183,3 +182,72 @@ terraform apply
 ```
 kibana should be available on remote_ip:5601
 elastic search should be available on remote_ip:9200
+
+for more detailed instructions follow README.md under ec2 folder
+
+### metaflow flows can be run from the local machine or from the remote (all necessary env vars and config files are already in place)
+this might be neede to keep ELK accessable only within vpc - flows can access "localhost:9200"
+
+to run on the local make sure the following variables are set
+export OPENAI_API_KEY="XXXXXXXXXXXXXXXXXX" #### (only needed for davinci flows)
+export HUGGING_FACE_TOKEN="xxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+### this api key is needed to fetch additional data from USDA (sf_usda_to_es_flows.py - RUNS SEVERAL DAYS!!! due to timeout limits on the usda api)
+export USDA_API_KEY="xxxxxxxxxxxxxxxxxxxxxxxxxx"
+
+### if using elastic cloud
+export ES_CLOUD_ID="xxxxxxxxxxxxxxxxxxxxxx"
+export ES_USERNAME="xxxxxxxxxxxxxxxxx"
+export ES_PASSWORD="xxxxxxxxxxxxxxxxxxx"
+export ES_ENDPOINT="xxxxxxxxxxxxxxxxxxxxxxxxxxx"
+export ES_CLOUD_HOST="xxxxxxxxxxxxxxxxxxxxxxx"
+
+export ES_USERNAME="xxxxxxxxxxxxxxxxx"
+export ES_LOCAL_HOST="remote_machine_public_ip"
+
+### open new terminal window to git clone metaflow flows
+git clone https://github.com/arybach/mlops-metaflow.git
+cd mlops-metaflow
+
+check:
+[0] % metaflow status
+Metaflow (2.9.4)
+
+Using Metadata provider at: "https://ezhax7qv0f.execute-api.ap-southeast-1.amazonaws.com/api/"
+
+To list available flows, type:
+
+1. python
+2. from metaflow import Metaflow
+3. list(Metaflow()) 
+
+if Metadata provider is local - not from aws address - cchek steps in README.md under metaflow dir (most likely config was not set properly)
+cd mlops-metaflow
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+
+check contents of the metaflow config file: 
+~/.metaflowconfig/config.json
+
+this line will contain instructions on how to fetch auth_key:
+"METAFLOW_SERVICE_AUTH_KEY": "## Replace with output from 'aws apigateway get-api-key --api-key xxxxxx --include-value | grep value' ##",
+
+place output of the command into config file "METAFLOW_SERVICE_AUTH_KEY": "xxxxxxxxxxxxxx" 
+
+python3 sf_usda_flow.py run
+### if metadata request fails this authentication key is not set properly
+[0] % python3 sf_usda_flow.py run                    
+[nltk_data] Downloading package punkt to /home/groot/nltk_data...
+[nltk_data]   Package punkt is already up-to-date!
+Metaflow 2.9.10 executing SfUsdaFlow for user:groot
+Validating your flow...
+    The graph looks good!
+Running pylint...
+    Pylint is happy!
+    Metaflow service error:
+    Metadata request (/flows/SfUsdaFlow) failed (code 403): {"message":"Forbidden"}
+
+
+### use aws cli to set proper region name - should not contain any quotes
+aws configure get region
+ aws configure set region ap-southeast-1

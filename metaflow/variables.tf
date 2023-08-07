@@ -42,7 +42,7 @@ variable "compute_environment_desired_vcpus" {
 variable "compute_environment_instance_types" {
   type        = list(string)
   description = "The instance types for the compute environment"
-  default     = ["c4.large", "c4.xlarge", "c4.2xlarge"]
+  default     = ["c4.large", "c4.xlarge", "c4.2xlarge", "c5.large", "c5.xlarge", "c5.2xlarge" ]
   #default     = ["c4.large", "c4.xlarge", "c4.2xlarge", "c4.4xlarge", "c4.8xlarge"]
 }
 

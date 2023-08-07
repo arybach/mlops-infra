@@ -86,4 +86,9 @@ if any changes to default docker-compose file are needed uncomment provisioner f
 ### full instructions
 https://github.com/deviantony/docker-elk/tree/tls#bringing-up-the-stack
 
-kibana should be accessable on remote_machine_ip:5600 port (password in .env file)
+elasticsearch should be running on remote_machine_ip:9200 and kibana should be accessable on remote_machine_ip:5601 port (password in .env file)
+if kibana is not running use elastic.pem file to ssh into remote machine and check logs
+ssh -i elastic.pem ec2-user@remote_machine_ip
+docker-compose down
+docker-compose up
+should be sufficient unless security group blocks access to ports

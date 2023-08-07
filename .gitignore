@@ -1,3 +1,9 @@
+batch/.terraform
+batch/.terraform.lock.hcl
+batch/terraform.tfstate
+batch/terraform.tfstate.backup
+batch/.env
+batch/config.json
 
 ec2/.terraform
 ec2/.terraform.lock.hcl
@@ -5,6 +11,14 @@ ec2/terraform.tfstate
 ec2/terraform.tfstate.backup
 ec2/elastic.pem
 ec2/secrets.tfvars
+
+fastapi/.terraform
+fastapi/.terraform.lock.hcl
+fastapi/terraform.tfstate
+fastapi/terraform.tfstate.backup
+fastapi/evidently.pem
+fastapi/secrets.tfvars
+
 
 infra/.terraform
 infra/.terraform.lock.hcl
@@ -20,3 +34,8 @@ sagemaker/.terraform
 sagemaker/.terraform.lock.hcl
 sagemaker/terraform.tfstate
 sagemaker/terraform.tfstate.backup
+
+mlops_metaflow
+mlops-metaflow/*
+mlops_metaflow/.metaflow
+mlops_metaflow/.venv

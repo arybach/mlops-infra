@@ -291,13 +291,13 @@ resource "aws_instance" "ec2_instance" {
       "echo \"export S3_BUCKET_NAME=${data.terraform_remote_state.metaflow.outputs.metaflow_s3_bucket_name}\" >> ~/.bashrc",
       "echo \"export BATCH_CONTAINER_NAME=${data.terraform_remote_state.metaflow.outputs.metaflow_batch_container_image}\" >> ~/.bashrc",
       "source ~/.bashrc",
-      "cp /home/ec2-user/elk_tls/* /home/ec2-user/docker-elk/",
+      "sudo cp /home/ec2-user/elk_tls/.env /home/ec2-user/docker-elk/.env",
       "cd /home/ec2-user/docker-elk",
       "docker-compose up setup",
     ]
   }
 
-  # if any changes are needed to the docker-compose pass your own version before docker-compose up
+  # if any changes are needed to the docker-compose - pass your own version before docker-compose up
   # provisioner "file" {
   #   connection {
   #     type        = "ssh"
@@ -306,7 +306,7 @@ resource "aws_instance" "ec2_instance" {
   #     host        = aws_eip.ec2_eip.public_ip
   #   }
   #   source      = "./docker-compose.yml"
-  #   destination = "/home/ec2-user/elk_tls/docker-compose.yml"
+  #   destination = "/home/ec2-user/docker-elk/docker-compose.yml"
   # }
 
   provisioner "remote-exec" {
@@ -319,9 +319,9 @@ resource "aws_instance" "ec2_instance" {
 
     // Execute the provision.sh script on the remote machine
     inline = [
-      "cp /home/ec2-user/elk_tls/* /home/ec2-user/docker-elk/",
+      "sudo cp /home/ec2-user/elk_tls/.env /home/ec2-user/docker-elk/.env",
       "cd /home/ec2-user/docker-elk/",
-      "nohup docker-compose up > /dev/null 2>&1 &",
+      "sudo -u ec2-user nohup docker-compose up > /dev/null 2>&1 &"
     ]
   }
 
@@ -341,31 +341,3 @@ output "ec2_sg_id" {
 output "ec2_iam_role_name" {
   value = aws_iam_role.ec2_iam_role.name
 }
-
-    # inline = [
-    #   // Additional step 1: Create directories
-    #   "mkdir -p /home/ec2-user/.metaflowconfig",
-    #   "mkdir -p /home/ec2-user/elk_tls",
-      
-    #   // Additional step 2: Copy files to the remote machine
-    #   "scp ~/.metaflowconfig/config.json ec2-user@${aws_eip.ec2_eip.public_ip}:/home/ec2-user/.metaflowconfig/config.json",
-    #   "scp .env ec2-user@${aws_eip.ec2_eip.public_ip}:/home/ec2-user/elk_tls/.env",
-    #   "scp docker-compose.yml ec2-user@${aws_eip.ec2_eip.public_ip}:/home/ec2-user/elk_tls/docker-compose.yml",
-    #   "scp install.sh ec2-user@${aws_eip.ec2_eip.public_ip}:/home/ec2-user/install.sh",
-    #   "sudo chmod +x /home/ec2-user/install.sh && cd /home/ec2-user/ && bash install.sh",
-
-    #   // Additional step 3: Export environment variables
-    #   "echo \"export AWS_ACCESS_KEY_ID=${local.secrets.AWS_ACCESS_KEY_ID}\" >> ~/.bashrc",
-    #   "echo \"export AWS_SECRET_ACCESS_KEY=${local.secrets.AWS_SECRET_ACCESS_KEY}\" >> ~/.bashrc",
-    #   "echo \"export AWS_REGION=${local.secrets.AWS_REGION}\" >> ~/.bashrc",
-    #   "echo \"export OPENAI_API_KEY=${local.secrets.OPENAI_API_KEY}\" >> ~/.bashrc",
-    #   "echo \"export HUGGING_FACE_TOKEN=${local.secrets.HUGGING_FACE_TOKEN}\" >> ~/.bashrc",
-    #   "echo \"export USDA_API_KEY=${local.secrets.USDA_API_KEY}\" >> ~/.bashrc",
-    #   "echo \"export S3_BUCKET_NAME=${data.terraform_remote_state.metaflow.outputs.metaflow_s3_bucket_name}\" >> ~/.bashrc",
-    #   "echo \"export BATCH_CONTAINER_NAME=${data.terraform_remote_state.metaflow.outputs.metaflow_batch_container_image}\" >> ~/.bashrc",
-    #   "source ~/.bashrc",
-
-    #   // Additional step 3: Run commands on the remote machine
-    #   "cd /home/ec2-user/ && git clone https://github.com/swimlane/elk-tls-docker.git",
-    #   "cp /home/ec2-user/elk_tls/* /home/ec2-user/elk-tls-docker/ && cd /home/ec2-user/elk-tls-docker/ && docker-compose up setup", 
-    # ]

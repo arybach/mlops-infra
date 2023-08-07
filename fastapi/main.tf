@@ -1,14 +1,11 @@
 provider "aws" {
   #region = var.aws_region
   region = data.terraform_remote_state.infra.outputs.aws_region
-
 }
 
-module "common_vars" {
-  source = "../modules/common"
-
-  app = var.app
-  env = var.env
+provider "vault" {
+  address = "http://127.0.0.1:8200"
+  token   = "environment"
 }
 
 data "terraform_remote_state" "infra" {
@@ -34,4 +31,5 @@ data "terraform_remote_state" "ec2" {
     path = "../ec2/terraform.tfstate"
   }
 }
+
 
