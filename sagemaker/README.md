@@ -22,4 +22,4 @@ This makes it a poor candidate for IAC, but it can be used for model development
 then check:
 '''!metaflow status
 * to make sure it points to proper service url
-* metaflow experiments will be logged to metaflow service and cards available
+* metaflow experiments will be logged to metaflow service and cards available fro viewing

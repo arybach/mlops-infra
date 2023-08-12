@@ -1,3 +1,5 @@
+*.pem
+
 batch/.terraform
 batch/.terraform.lock.hcl
 batch/terraform.tfstate

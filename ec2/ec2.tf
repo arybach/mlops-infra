@@ -321,7 +321,7 @@ resource "aws_instance" "ec2_instance" {
     inline = [
       "sudo cp /home/ec2-user/elk_tls/.env /home/ec2-user/docker-elk/.env",
       "cd /home/ec2-user/docker-elk/",
-      "sudo -u ec2-user nohup docker-compose up > /dev/null 2>&1 &"
+      "docker-compose up -d"
     ]
   }
 

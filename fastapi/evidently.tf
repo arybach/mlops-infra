@@ -233,6 +233,7 @@ resource "aws_instance" "evidently_instance" {
       "echo \"export S3_BUCKET_NAME=${data.terraform_remote_state.metaflow.outputs.metaflow_s3_bucket_name}\" >> ~/.bashrc",
       "echo \"export ES_LOCAL_HOST=${data.terraform_remote_state.ec2.outputs.eip_public_ip}\" >> ~/.bashrc",
       "echo \"export ES_PASSWORD=${local.secrets.ES_PASSWORD}\" >> ~/.bashrc",
+      "echo \"export ES_LOCAL_HOST=${local.secrets.ES_LOCAL_HOST}\" >> ~/.bashrc",
       "echo \"export POSTGRES_USER=${local.secrets.POSTGRES_USER}\" >> ~/.bashrc",
       "echo \"export POSTGRES_PASSWORD=${local.secrets.POSTGRES_PASSWORD}\" >> ~/.bashrc",
       "source ~/.bashrc",
@@ -256,6 +257,7 @@ resource "aws_instance" "evidently_instance" {
       "pip install wheel",
       "python3 setup.py bdist_wheel",
       "python3 src/scripts/create_db.py",
+      # this is for debugging (make sure ES_LOCAL_HOST and ES_PASSWORD env vars are properly set in the vault and on the machine before running)
       "python3 src/pipelines/load_data.py", 
       "python3 src/pipelines/process_data.py",
       "python3 src/pipelines/prepare_reference_data.py",

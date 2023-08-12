@@ -8,7 +8,8 @@ echo "OPENAI_API_KEY=$6" >> .env
 echo "HUGGING_FACE_TOKEN=$7" >> .env
 echo "USDA_API_KEY=$8" >> .env
 echo "ES_PASSWORD=$9" >> .env
-echo "WANDB_API_KEY=$10" >> .env
+echo "ES_LOCAL_HOST=$10" >> .env
+echo "WANDB_API_KEY=$11" >> .env
 
 # Copy metaflow config file
 cp ~/.metaflowconfig/config.json .
